@@ -14,7 +14,7 @@ hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML,
     'Accept-Language': 'en-US,en;q=0.8',
     'Connection': 'keep-alive'}
 
-headers = ["#", "CVE ID", "CWE ID", "# of Exploits", "Type", "Publish Date", "Update Date", "Score", "Gained Access", "Access", "Complexity", "Authentication", "Conf.", "Integ.", "Avail.", "Description"]
+headers = ["CVE ID", "CWE ID", "# of Exploits", "Type", "Publish Date", "Update Date", "Score", "Gained Access", "Access", "Complexity", "Authentication", "Conf.", "Integ.", "Avail.", "Description"]
 
 def get_cves_from_page(url, filename):
     req = urllib2.Request(url, None, hdr)
@@ -26,7 +26,8 @@ def get_cves_from_page(url, filename):
     soup = BeautifulSoup(html, 'html.parser')
     table = soup.find('table', attrs={'id': 'vulnslisttable'})
     result = [[td.text.encode("utf-8") for td in row.find_all("td")] for row in table.select("tr + tr")]
-    results = []
+    [result[x].pop(0) for x in range(0, len(result), 2)]
+    reisults = []
     for x in range(0, len(result), 2):
         results.append(result[x] + result[x + 1])
     results = [map(str.strip, td) for td in results]
